@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "list.h"
+#include <stdlib.h>
 
 list_t *listNew()
 {
@@ -17,7 +18,7 @@ void listAddFirst(list_t *l, int data)
     l->size++;
 }
 // se asume: i < l->size
-void *listGet(list_t *l, uint8_t i)
+int listGet(list_t *l, uint8_t i)
 {
     node_t *n = l->first;
     for (uint8_t j = 0; j < i; j++)
@@ -25,10 +26,10 @@ void *listGet(list_t *l, uint8_t i)
     return n->data;
 }
 // se asume: i < l->size
-void *listRemove(list_t *l, uint8_t i)
+int listRemove(list_t *l, uint8_t i)
 {
     node_t *tmp = NULL;
-    void *data = NULL;
+    int data = 0;
     if (i == 0)
     {
         data = l->first->data;
@@ -60,3 +61,25 @@ void listDelete(list_t *l)
     free(l);
 }
 
+void listSwap(list_t *l, uint8_t i, uint8_t j) {
+    if(l->first == NULL || l->first->next == NULL) return;
+    node_t *antPrimero = l->first;
+    for (uint8_t q = 0; q < i-1; q++)
+        antPrimero = antPrimero->next;
+
+    node_t *antSegundo = l->first;
+    for (uint8_t q = 0; q < j-1; q++)
+        antSegundo = antSegundo->next;
+
+    node_t* primero = antPrimero->next;
+    node_t* segundo = antSegundo->next;
+
+    node_t* primeroNext = primero->next;
+    node_t* segundoNext = segundo->next;
+
+    primero->next = segundoNext;
+    segundo->next = primeroNext;
+
+    antPrimero->next = segundo;
+    antSegundo->next = primero;
+}
